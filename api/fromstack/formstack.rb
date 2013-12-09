@@ -22,8 +22,8 @@ class FormStack < Grape::API
 
     post '/' do
 
-      ship_address = CompositeDecoder.decode params['Shipping Address']
-      doctor_address = CompositeDecoder.decode params['Physician Address']
+      ship_address = CompositeDecoder.decode params['Shipping Address:']
+      doctor_address = CompositeDecoder.decode params['Physician Address:']
       lead_address = CompositeDecoder.decode params['Address:']
 
       lead_full_name = CompositeDecoder.decode(params['Name:'])
