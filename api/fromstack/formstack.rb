@@ -1,6 +1,7 @@
 require 'grape'
 require 'pry'
 require 'rest-client'
+require 'logger'
 
 class CompositeDecoder
   def self.decode(field)
@@ -22,6 +23,8 @@ class FormStack < Grape::API
 
     post '/' do
 
+      logger = Logger.new('post-log.log')
+
       ship_address = CompositeDecoder.decode params['Shipping Address:']
       doctor_address = CompositeDecoder.decode params['Physician Address:']
       lead_address = CompositeDecoder.decode params['Address:']
@@ -29,11 +32,8 @@ class FormStack < Grape::API
       lead_full_name = CompositeDecoder.decode(params['Name:'])
       doctor_name = CompositeDecoder.decode(params['Physician Name:'])
 
-      matched_date = params['Date of Birth:'].scan(/(\d+)\/(\d+)\/(\d+)/)[0]
-      date_of_birth = "#{matched_date[2]}-#{matched_date[0]}-#{matched_date[1]}"
 
       form = {
-          dateOfBirth: date_of_birth,
           full_name: "#{lead_full_name['first']} #{lead_full_name['last']}",
           phone: params['Phone:'],
           insuranceName: params['Insurance Name:'],
@@ -63,8 +63,15 @@ class FormStack < Grape::API
           PhysicianFax: params['Physician Fax:'],
       }
 
+      matched_date = params['Date of Birth:'].scan(/(\d+)\/(\d+)\/(\d+)/)
+
+      if matched_date.length > 0
+        date_of_birth = "#{matched_date[0][2]}-#{matched_date[0]}-#{matched_date[1]}"
+        form[:dateOfBirth] = date_of_birth
+      end
+
       login_hash = {
-          controller:'leads',
+          controller: 'leads',
           action: 'importOrders',
           email: Settings.center.login,
           password: Settings.center.password
@@ -72,8 +79,9 @@ class FormStack < Grape::API
 
       response = RestClient.post 'http://api.insuracrm.com/api/', form.merge(login_hash)
 
-      response.body
+      logger.info "Response of post: #{response.body}"
 
+      'OK'
     end
 
   end
