@@ -2,6 +2,7 @@ require 'grape'
 require 'pry'
 require 'rest-client'
 require 'logger'
+require 'yaml'
 
 class CompositeDecoder
   def self.decode(field)
@@ -73,12 +74,18 @@ class FormStack < Grape::API
       login_hash = {
           controller: 'leads',
           action: 'importOrders',
-          email: Settings.center.login,
-          password: Settings.center.password
       }
 
-      response = RestClient.post 'http://api.insuracrm.com/api/', form.merge(login_hash)
+      settings = YAML.load File.read(File.dirname(__FILE__) +'/../config.yml')
 
+      center_code = params['Affiliate Callcenter']
+
+      login_details = settings[:centers].select { |x| center_code.downcase.include?(x[:signature]) }.first
+
+      login_hash[:email] = login_details[:login]
+      login_hash[:password] = login_details[:password]
+
+      response = RestClient.post 'http://api.insuracrm.com/api/', form.merge(login_hash)
       logger.info "Response of post: #{response.body}"
 
       'OK'
