@@ -18,6 +18,12 @@ class CompositeDecoder
   end
 end
 
+class CheckboxListDecoder
+  def self.checked?(field, value)
+    field.downcase.include?(value.downcase) ? 'Yes' : nil
+  end
+end
+
 class FormStack < Grape::API
   format :json
   resource :forms do
@@ -76,17 +82,88 @@ class FormStack < Grape::API
           action: 'importOrders',
       }
 
-      settings = YAML.load File.read(File.dirname(__FILE__) +'/../config.yml')
-
       center_code = params['Affiliate Callcenter']
 
-      login_details = settings[:centers].select { |x| center_code.downcase.include?(x[:signature]) }.first
+      login_details = $settings[:centers].select { |x| center_code.downcase.include?(x[:signature]) }.first
 
       login_hash[:email] = login_details[:login]
       login_hash[:password] = login_details[:password]
 
       response = RestClient.post 'http://api.insuracrm.com/api/', form.merge(login_hash)
       logger.info "Response of post: #{response.body}"
+
+      'OK'
+    end
+
+    post '/to-pdf' do
+
+      logger = Logger.new('to-pdf-.log')
+
+      doctor_name = CompositeDecoder.decode(params['Doctor'])
+      patient_name = CompositeDecoder.decode(params['Patient Name'])
+      doctor_address= CompositeDecoder.decode params['Doctor Address']
+      patient_address= CompositeDecoder.decode params['Patient Address']
+
+      doctor_name = "#{doctor_name['first']} #{doctor_name['last']}"
+      form = {
+          doctor_name: doctor_name,
+          doctor_address: doctor_address['address'],
+          doctor_phone: params['Doctor Phone'],
+          doctor_fax: params['Doctor Fax'],
+          dea: params['DEA #'],
+          npi: params['NPI #'],
+          doctor_city_state_zip: "#{doctor_address['city']} #{doctor_address['state']} #{doctor_address['zip']}",
+          patient_lastname: patient_name['last'],
+          patient_middle: patient_name['middle'],
+          patient_city: patient_address['city'],
+          patient_state: patient_address['state'],
+          patient_firstname: patient_name['first'],
+          patient_zip: patient_address['zip'],
+          patient_address: patient_address['address'],
+          patient_phone: params['Patient Phone'],
+          patient_alt_phone: params['Patient Alt Phone'],
+          patient_dob: params['Patient Date of Birth'],
+          patient_ss: params['Last 4-digits of SS#'],
+          diagnosis: params['Diagnosis'],
+          icd: params['ICD-9 Codes'],
+          aspirin: CheckboxListDecoder.checked?(params['Allergies'], 'Aspirin'),
+          codeine: CheckboxListDecoder.checked?(params['Allergies'], 'Codeine'),
+          macrolides: CheckboxListDecoder.checked?(params['Allergies'], 'Macrolides'),
+          penicillin: CheckboxListDecoder.checked?(params['Allergies'], 'Penicillin'),
+          quinolone: CheckboxListDecoder.checked?(params['Allergies'], 'Quinolone'),
+          cephalosporin: CheckboxListDecoder.checked?(params['Allergies'], 'Cephalosporin'),
+          sulfa: CheckboxListDecoder.checked?(params['Allergies'], 'Sulfa'),
+          tetracycline: CheckboxListDecoder.checked?(params['Allergies'], 'Tetracycline'),
+          allergies_other: params['Allergies Other:'],
+          carrier: params['Carrier Name'],
+          member_id: params['Member ID #'],
+          rx_group: params['Member ID #'],
+          rx_bin: params['Rx Bin #'],
+          pcn: params['PCN #'],
+          carrier_phone: params['Carrier Phone #'],
+          payment_medicare: params['Payment Type'].include?('Medicare + Supplemental Insurance') ? 'Yes' : nil,
+          payment_comp: params['Payment Type'].include?('Worker’s Comp') ? 'Yes' : nil,
+          payment_cash: params['Payment Type'].include?('Cash') ? 'Yes' : nil,
+          payment_third_party: params['Payment Type'].include?('Third Party Insurance') ? 'Yes' : nil,
+          payment_hmo: params['Payment Type'].include?('HMO/PPO') ? 'Yes' : nil,
+          payment_pip: params['Payment Type'].include?('Personal Injury/Auto/PIP') ? 'Yes' : nil,
+      }
+
+      require 'pdf_forms'
+      require 'dropbox_sdk'
+
+      pdftk = PdfForms.new('/usr/bin/pdftk')
+
+      pdf_filename = "Patient-#{patient_name['first']}-#{patient_name['last']}-#{Date.today.strftime('%d-%m-%Y')}-#{SecureRandom.uuid[0..4]}.pdf"
+
+      pdf_filename_full_path = "#{File.dirname(__FILE__)}/saved-forms/#{pdf_filename}"
+
+      template_pdf = File.dirname(__FILE__) +'/template.pdf'
+
+      pdftk.fill_form template_pdf, pdf_filename_full_path, form
+
+      client = DropboxClient.new($settings[:dropbox_key])
+      client.put_file("#{$settings[:dropbox_folder]}/#{pdf_filename}", open(pdf_filename_full_path))
 
       'OK'
     end
