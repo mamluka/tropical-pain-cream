@@ -73,7 +73,7 @@ class FormStack < Grape::API
       matched_date = params['Date of Birth:'].scan(/(\d+)\/(\d+)\/(\d+)/)
 
       if matched_date.length > 0
-        date_of_birth = "#{matched_date[0][2]}-#{matched_date[0]}-#{matched_date[1]}"
+        date_of_birth = "#{matched_date[0][2]}-#{matched_date[0][0]}-#{matched_date[0][1]}"
         form[:dateOfBirth] = date_of_birth
       end
 
