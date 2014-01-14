@@ -90,7 +90,7 @@ class FormStack < Grape::API
       login_hash[:password] = login_details[:password]
       subdomain = login_details[:subdomain]
 
-      response = RestClient.post "http://#{subdomain}.insuracrm.com/api/", form.merge(login_hash)
+      response = RestClient.post "https://#{subdomain}.insuracrm.com/api/", form.merge(login_hash)
       logger.info "Response of post: #{response.body}"
 
       'OK'
