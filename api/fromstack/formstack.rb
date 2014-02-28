@@ -84,7 +84,7 @@ class FormStack < Grape::API
 
       center_code = params['Affiliate Callcenter']
 
-      login_details = $settings[:centers].select { |x| center_code.downcase.include?(x[:signature].to_s) }.first
+      login_details = $settings[:centers].select { |x| center_code.downcase == x[:signature].to_s.downcase }.first
 
       login_hash[:email] = login_details[:login]
       login_hash[:password] = login_details[:password]
