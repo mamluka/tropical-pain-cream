@@ -41,17 +41,15 @@ class FormStackDoctorNetwork < Grape::API
 
 
       lead_full_name = CompositeDecoder.decode(params['Name'])
-      doctor_name = params['Ok. Great!! What’s the name of the Doctor you’re seeing for your pain?'].split(' ')
-
 
       form = {
           full_name: "#{lead_full_name['first']} #{lead_full_name['last']}",
           phone: [params['Primary Phone #'], params['Phone']].compact.first,
-          insuranceName: params['What is the name of your Health insurance carrier?'],
-          insurancePlanNumber: params['On the front of the card you should see your Policy Number or Member ID Number. What is that number? '],
-          insuranceGroupNumber: params['What is the RX Group # Number? '],
-          insuranceBinNumber: params['What is the RX BIN # Number?'],
-          insurancePCNNumber: params['What is the PCN Number?'],
+          insuranceName: [params['What is the name of your Health insurance carrier?'], params['Insurance Company Name']].compact.first,
+          insurancePlanNumber: [params['On the front of the card you should see your Policy Number or Member ID Number. What is that number? '], params['Insurance Company Member ID/Policy #']].compact.first,
+          insuranceGroupNumber: [params['What is the RX Group # Number? '], params['Insurance RX Group #']].compact.first,
+          insuranceBinNumber: [params['What is the RX BIN # Number?'], params['Insurance RX BIN #']].compact.first,
+          insurancePCNNumber: [params['What is the PCN Number?'], params['Insurance PCN Number']].compact.first,
           address: 'unspecified',
           address2: 'unspecified',
           city: 'unspecified',
@@ -63,16 +61,24 @@ class FormStackDoctorNetwork < Grape::API
           ship_to_stateCode: ship_address['state'],
           ship_to_zipcode: ship_address['zip'],
           PhysicianNPI: 'unspecified',
-          PhysicianFirstName: doctor_name[0],
-          PhysicianLastName: (doctor_name[1] rescue 'Not given'),
           PhysicianAddress1: 'unspecified',
           PhysicianAddress2: 'unspecified',
           PhysicianCity: 'unspecified',
           PhysicianState: 'NY',
           PhysicianZip: '12345',
-          PhysicianPhone: [params['Do you know the phone number?'], params['Do you know the phone number']].compact.first,
+          PhysicianPhone: [params['Do you know the phone number?'], params['Do you know the phone number'], params['Doctors Phone #']].compact.first,
           PhysicianFax: '9876111111',
       }
+
+      if params['Doctors Name']
+        doctor_name = CompositeDecoder.decode(params['Doctors Name'])
+        form = form.merge PhysicianFirstName: doctor_name['first'],
+                          PhysicianLastName: doctor_name['last']
+
+      else
+        doctor_name = params['Ok. Great!! What’s the name of the Doctor you’re seeing for your pain?'].split(' ')
+        form = form.merge PhysicianFirstName: doctor_name[0], PhysicianLastName: (doctor_name[1] rescue 'Not given')
+      end
 
       if params['What is your DOB?']
         dob_param = params['What is your DOB?']
