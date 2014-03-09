@@ -66,7 +66,12 @@ class FormStackDoctorNetwork < Grape::API
         PhysicianFax: '9876111111',
     }
 
-    matched_date = params['What is your DOB? (Must be 64yrs old and younger)'].scan(/(\d+)\/(\d+)\/(\d+)/)
+    if params['What is your DOB?']
+      dob_param = params['What is your DOB?']
+    elsif params['What is your DOB? (Must be 64yrs old and younger)']
+      dob_param = params['What is your DOB? (Must be 64yrs old and younger)']
+    end
+    matched_date = dob_param.scan(/(\d+)\/(\d+)\/(\d+)/)
 
     if matched_date.length > 0
       date_of_birth = "#{matched_date[0][2]}-#{matched_date[0][0]}-#{matched_date[0][1]}"
