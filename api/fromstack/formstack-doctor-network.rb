@@ -28,7 +28,8 @@ end
 class FormStackDoctorNetwork < Grape::API
   format :json
   #resource :forms do
-  post '/doctor-network' do
+  #post '/doctor-network' do
+  post '/new' do
 
     logger = Logger.new('biotech-post-log.log')
 
