@@ -3,6 +3,7 @@ require 'grape'
 class Root < Grape::API
 
   require_relative 'fromstack/formstack'
+  require_relative 'fromstack/formstack-doctor-network'
   require 'mail'
 
   Mail.defaults do
@@ -19,4 +20,5 @@ class Root < Grape::API
   $settings = YAML.load File.read(File.dirname(__FILE__) +'/config.yml')
 
   mount FormStack
+  mount FormStackDoctorNetwork
 end
