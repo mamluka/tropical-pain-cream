@@ -27,11 +27,13 @@ end
 
 class FormStackDoctorNetwork < Grape::API
   format :json
-  #resource :forms do
-  #post '/doctor-network' do
-  post '/new' do
+  resource :forms do
+  post '/doctor-network' do
 
     logger = Logger.new('biotech-post-log.log')
+
+    logger.info "Form"
+    logger.info JSON.pretty_generate(params)
 
     ship_address = CompositeDecoder.decode params['When we ship the cream to you, someone will have to sign for the package, being that it is a medication. It will be shipped during normal business hours of 8am -5pm. Where would you like to have it shipped to? (Home, Work, etc…., ask if there is A Unit #)']
 
@@ -45,7 +47,7 @@ class FormStackDoctorNetwork < Grape::API
         phone: [params['Primary Phone #'], params['Phone']].compact.first,
         insuranceName: params['What is the name of your Health insurance carrier?'],
         insurancePlanNumber: params['On the front of the card you should see your Policy Number or Member ID Number. What is that number? '],
-        insuranceGroupNumber: params['What is the RX Group # Number? '],
+        nsuranceGroupNumber: params['What is the RX Group # Number? '],
         insuranceBinNumber: params['What is the RX BIN # Number?'],
         insurancePCNNumber: params['What is the PCN Number?'],
         address: 'unspecified',
@@ -66,7 +68,7 @@ class FormStackDoctorNetwork < Grape::API
         PhysicianCity: 'unspecified',
         PhysicianState: 'NY',
         PhysicianZip: '12345',
-        PhysicianPhone: params['Do you know the phone number?'],
+        PhysicianPhone: [params['Do you know the phone number?'],params['Do you know the phone number']].compact.first,
         PhysicianFax: '9876111111',
     }
 
@@ -99,9 +101,9 @@ class FormStackDoctorNetwork < Grape::API
 
     logger.info 'Submitted'
     logger.info JSON.pretty_generate(form)
-    logger.info "Response of post: #{response.body}"
+        logger.info "Response of post: #{response.body}"
 
     'OK'
-    #end
+    end
   end
 end
