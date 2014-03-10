@@ -46,6 +46,7 @@ class FormStackDoctorNetwork < Grape::API
           full_name: "#{lead_full_name['first']} #{lead_full_name['last']}",
           phone: [params['Primary Phone #'], params['Phone']].compact.first,
           insuranceCarrierName: [params['What is the name of your Health insurance carrier?'], params['Insurance Company Name']].compact.first,
+          insuranceCarrierPhone: [params['What’s the Phone Number of your Insurance Company?'],params['Insurance Company Phone #']].compact.first,
           insurancePlanNumber: [params['On the front of the card you should see your Policy Number or Member ID Number. What is that number? '], params['Insurance Company Member ID/Policy #']].compact.first,
           insuranceGroupNumber: [params['What is the RX Group # Number? '], params['Insurance RX Group #']].compact.first,
           insuranceBinNumber: [params['What is the RX BIN # Number?'], params['Insurance RX BIN #']].compact.first,
