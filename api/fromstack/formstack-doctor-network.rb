@@ -80,7 +80,7 @@ class FormStackDoctorNetwork < Grape::API
         form = form.merge PhysicianFirstName: doctor_name[0], PhysicianLastName: (doctor_name[1] rescue 'Not given')
       end
 
-      dob_param = [params['What is your DOB? (Must be 64yrs old and younger)'], params['What is your DOB? (Must be 64yrs old and younger)'], params['Date Of Birth']].compact.first
+      dob_param = [params['What is your DOB? (Must be 64yrs old and younger)'], params['What is your DOB? (Must be 64yrs old and younger)'], params['Date Of Birth'], params['What is your DOB?']].compact.first
       matched_date = dob_param.scan(/(\d+)\/(\d+)\/(\d+)/)
 
       if matched_date.length > 0
