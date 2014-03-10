@@ -36,8 +36,8 @@ class FormStackDoctorNetwork < Grape::API
       logger.info JSON.pretty_generate(params)
 
       ship_address = CompositeDecoder.decode [params['When we ship the cream to you, someone will have to sign for the package, being that it is a medication. It will be shipped during normal business hours of 8am -5pm. Where would you like to have it shipped to? (Home, Work, etc…., ask if there is A Unit #)'],
-                                              params['Shipping Address'],
-                                              params['Prospects Address']].compact.first
+                                              params['Prospects Address'],
+                                              params['Shipping Address']].compact.select { |x| !x.empty? }.first
 
 
       lead_full_name = CompositeDecoder.decode(params['Name'])
