@@ -100,6 +100,8 @@ class FormStack < Grape::API
 
       logger = Logger.new('to-pdf-.log')
 
+      logger.info params
+
       doctor_name = CompositeDecoder.decode(params['Doctor'])
       patient_name = CompositeDecoder.decode(params['Patient Name'])
       doctor_address= CompositeDecoder.decode params['Doctor Address']
@@ -124,8 +126,8 @@ class FormStack < Grape::API
           patient_phone: params['Patient Phone'],
           patient_alt_phone: params['Patient Alt Phone'],
           patient_dob: params['Patient Date of Birth'],
-          patient_ss: params['Last 4-digits of SS#'],
-          diagnosis: params['Diagnosis'],
+          #patient_ss: params['Last 4-digits of SS#'],
+          #diagnosis: params['Diagnosis'],
           icd: params['ICD-9 Codes'],
           aspirin: CheckboxListDecoder.checked?(params['Allergies'], 'Aspirin'),
           codeine: CheckboxListDecoder.checked?(params['Allergies'], 'Codeine'),
@@ -136,7 +138,7 @@ class FormStack < Grape::API
           sulfa: CheckboxListDecoder.checked?(params['Allergies'], 'Sulfa'),
           tetracycline: CheckboxListDecoder.checked?(params['Allergies'], 'Tetracycline'),
           allergies_other: params['Allergies Other:'],
-          carrier: params['Carrier Name'],
+          #carrier: params['Carrier Name'],
           member_id: params['Member ID #'],
           rx_group: params['Member ID #'],
           rx_bin: params['Rx Bin #'],
@@ -148,6 +150,23 @@ class FormStack < Grape::API
           payment_third_party: params['Payment Type'].include?('Third Party Insurance') ? 'Yes' : nil,
           payment_hmo: params['Payment Type'].include?('HMO/PPO') ? 'Yes' : nil,
           payment_pip: params['Payment Type'].include?('Personal Injury/Auto/PIP') ? 'Yes' : nil,
+          back_pain: CheckboxListDecoder.checked?(params['Diagnosis'], 'back_pain'),
+          neuropathy: CheckboxListDecoder.checked?(params['Diagnosis'], 'neuropathy'),
+          arthitis: CheckboxListDecoder.checked?(params['Diagnosis'], 'arthitis'),
+          rheumatoid_arthritis: CheckboxListDecoder.checked?(params['Diagnosis'], 'Aspirin'),
+          knee_pain: CheckboxListDecoder.checked?(params['Diagnosis'], 'Aspirin'),
+          scar_ttreatment: CheckboxListDecoder.checked?(params['Diagnosis'], 'Aspirin'),
+          post_surgery_scar: CheckboxListDecoder.checked?(params['Diagnosis'], 'Aspirin'),
+          diagnosis_other: params['Other diagnosis'],
+          ftccb_1: params['Formula'].include?('FTCCB - Flurbiprofen 20%, Tramadol 5%, Clonidine 0.2%, Cyclobenzaprine 4%, Bupivacaine 1%') ? 'Yes' : nil,
+          ftccb_2: params['Formula'].include?('FTCCB - Flurbiprofen 20%, Tramadol 5%, Clonidine 0.2%, Cyclobenzaprine 4%, Bupivacaine 3%') ? 'Yes' : nil,
+          scra: params['Formula'].include?('SCRA – (Keloids & Hyphertrophic) Tamaxifen Citrate 0.1%, Tranilast 1%, Lipoic Acid 0.5%, Fluticasone 1%, Collgenase 350 U/GM Hyaluronic Acid 0.1% PRACASIL PLUS') ? 'Yes' : nil,
+          away: params['Formula'].include?('AWAY – (new, old, keloid scars) Fluticasone 1%, Tretinoin 0.05% Pentoxifylline 3%, PRACASIL PLUS') ? 'Yes' : nil,
+          fade: params['Formula'].include?('FADE – (dark or hyperpigmented scars) Fluticasone 1%, Hydroquinone 8%, PRACASIL PLUS') ? 'Yes' : nil,
+          sugi: params['Formula'].include?('SUGI – (post surgical) Mupirocin 4%, Verapamil 6%, Phenytoin 2%, Betamethasone 0.1% PRACASIL PLUS') ? 'Yes' : nil,
+          quantity_120: params['Quantity'].include?('120 GM (ONE HUNDRED TWENTY GRAMS)') ? 'Yes' : nil,
+          quantity_240: params['Quantity'].include?('240 GM (TWO HUNDRED FORTY GRAMS)') ? 'Yes' : nil,
+          quantity_360: params['Quantity'].include?('360 GM (THREE HUNDRED SIXTY GRAMS)') ? 'Yes' : nil,
       }
 
       require 'pdf_forms'
@@ -159,7 +178,7 @@ class FormStack < Grape::API
 
       pdf_filename_full_path = "#{File.dirname(__FILE__)}/saved-forms/#{pdf_filename}"
 
-      template_pdf = File.dirname(__FILE__) +'/template.pdf'
+      template_pdf = File.dirname(__FILE__) +'/template_2.pdf'
 
       pdftk.fill_form template_pdf, pdf_filename_full_path, form
 
