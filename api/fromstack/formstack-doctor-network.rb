@@ -32,25 +32,27 @@ class FormStackDoctorNetwork < Grape::API
 
       logger = Logger.new('biotech-post-log.log')
 
-      logger.info "Form"
       logger.info JSON.pretty_generate(params)
 
       ship_address = CompositeDecoder.decode [params['When we ship the cream to you, someone will have to sign for the package, being that it is a medication. It will be shipped during normal business hours of 8am -5pm. Where would you like to have it shipped to? (Home, Work, etc…., ask if there is A Unit #)'],
                                               params['Prospects Address'],
-                                              params['Shipping Address']].compact.select { |x| !x.empty? }.first
+					      params['Please provide me your Physical Address '],
+                                              params['Shipping Address'],
+					      params['When we ship the cream to you, someone will have to sign for the package, being that it is a medication. It will be shipped during normal business hours of 8am -5pm. What is your physical address?']
+					      ].compact.select { |x| x.length > 0 }.first
 
 
-      lead_full_name = CompositeDecoder.decode(params['Name'])
+      lead_full_name = CompositeDecoder.decode([params['Name'],params['Now just to confirm, I have your Name spelled as (Confirm First/Last Name)']].compact.first)
 
       form = {
           full_name: "#{lead_full_name['first']} #{lead_full_name['last']}",
-          phone: [params['Primary Phone #'], params['Phone']].compact.first,
-          insuranceCarrierName: [params['What is the name of your Health insurance carrier?'], params['Insurance Company Name']].compact.first,
-          insuranceCarrierPhone: [params['What’s the Phone Number of your Insurance Company?'], params['Insurance Company Phone #']].compact.first,
-          insurancePlanNumber: [params['On the front of the card you should see your Policy Number or Member ID Number. What is that number? '], params['Insurance Company Member ID/Policy #']].compact.first,
-          insuranceGroupNumber: [params['What is the RX Group # Number? '], params['Insurance RX Group #']].compact.first,
-          insuranceBinNumber: [params['What is the RX BIN # Number?'], params['Insurance RX BIN #']].compact.first,
-          insurancePCNNumber: [params['What is the PCN Number?'], params['Insurance PCN Number']].compact.first,
+          phone: [params['Primary Phone #'], params['Phone'],params['What is the best number to reach you?']].compact.first,
+          insuranceCarrierName: [params['What is the name of your Health insurance carrier?'], params['Insurance Company Name'],params['What is the name of your Insurance Company Name?']].compact.first,
+          insuranceCarrierPhone: [params['What’s the Phone Number of your Insurance Company?'], params['Insurance Company Phone #'],params['What is your Insurance Company\'s Phone #?']].compact.first,
+          insurancePlanNumber: [params['On the front of the card you should see your Policy Number or Member ID Number. What is that number? '], params['Insurance Company Member ID/Policy #'],params['What is your Insurance Company\'s Member ID/Policy #']].compact.first,
+          insuranceGroupNumber: [params['What is the RX Group # Number? '], params['Insurance RX Group #'],params['Your RX Group # ?']].compact.first,
+          insuranceBinNumber: [params['What is the RX BIN # Number?'], params['Insurance RX BIN #'],params['Your Insurance RX BIN # ?']].compact.first,
+          insurancePCNNumber: [params['What is the PCN Number?'], params['Insurance PCN Number'],params['What is your PCN Number ?']].compact.first,
           address: 'unspecified',
           address2: 'unspecified',
           city: 'unspecified',
@@ -81,7 +83,7 @@ class FormStackDoctorNetwork < Grape::API
         form = form.merge PhysicianFirstName: doctor_name[0], PhysicianLastName: (doctor_name[1] rescue 'Not given')
       end
 
-      dob_param = [params['What is your DOB? (Must be 64yrs old and younger)'], params['What is your DOB? (Must be 64yrs old and younger)'], params['Date Of Birth'], params['What is your DOB?']].compact.first
+      dob_param = [params['What is your DOB? (Must be 64yrs old and younger)'], params['What is your DOB? (Must be 64yrs old and younger)'], params['Date Of Birth'], params['What is your DOB?'],params['What is your Date Of Birth?']].compact.first
       matched_date = dob_param.scan(/(\d+)\/(\d+)\/(\d+)/)
 
       if matched_date.length > 0
