@@ -169,6 +169,9 @@ class FormStack < Grape::API
           quantity_360: params['Quantity'].include?('360 GM (THREE HUNDRED SIXTY GRAMS)') ? 'Yes' : nil,
       }
 
+      logger.info 'Converted:'
+      logger.info form
+
       require 'pdf_forms'
       require 'dropbox_sdk'
 
