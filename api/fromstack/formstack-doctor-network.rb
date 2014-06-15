@@ -4,6 +4,7 @@ require 'rest-client'
 require 'logger'
 require 'yaml'
 require 'json'
+require 'google_drive'
 
 class CompositeDecoder
   def self.decode(field)
