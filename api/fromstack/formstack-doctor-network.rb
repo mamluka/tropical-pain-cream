@@ -13,12 +13,11 @@ class CompositeDecoder
       match = x.scan(/(\w+?)\s=\s(.*$)/)[0]
       key = match[0]
       value = match[1]
-
       [key, value]
     }]
   end
 end
-
+ 
 class CheckboxListDecoder
   def self.checked?(field, value)
     field.downcase.include?(value.downcase) ? 'Yes' : nil
@@ -38,12 +37,22 @@ class FormStackDoctorNetwork < Grape::API
                                               params['Prospects Address'],
 					      params['Please provide me your Physical Address '],
                                               params['Shipping Address'],
+					      params['Where would you like to have it shipped to? '],
+					      params['What is your address?'],
 					      params['When we ship the cream to you, someone will have to sign for the package, being that it is a medication. It will be shipped during normal business hours of 8am -5pm. What is your physical address?']
 					      ].compact.select { |x| x.length > 0 }.first
 
 
-      lead_full_name = CompositeDecoder.decode([params['Name'],params['Now just to confirm, I have your Name spelled as (Confirm First/Last Name)']].compact.first)
+lead_name_field =  ([params['Name'],params['Now just to confirm, I have your Name spelled as (Confirm First/Last Name)'],params['What is your name as it appears on the card?']].compact.first)
 
+if lead_name_field.include? "\n"
+      lead_full_name = CompositeDecoder.decode lead_name_field
+else
+lead_full_name = {
+first: lead_name_field.split(' ').first,
+last: (lead_name_field.split(' ').last rescue "Not set")
+}
+end
       form = {
           full_name: "#{lead_full_name['first']} #{lead_full_name['last']}",
           phone: [params['Primary Phone #'], params['Phone'],params['What is the best number to reach you?']].compact.first,
@@ -83,7 +92,7 @@ class FormStackDoctorNetwork < Grape::API
         form = form.merge PhysicianFirstName: doctor_name[0], PhysicianLastName: (doctor_name[1] rescue 'Not given')
       end
 
-      dob_param = [params['What is your DOB? (Must be 64yrs old and younger)'], params['What is your DOB? (Must be 64yrs old and younger)'], params['Date Of Birth'], params['What is your DOB?'],params['What is your Date Of Birth?']].compact.first
+      dob_param = [params['What is your DOB? (Must be 64yrs old and younger)'], params['What is your DOB? (Must be 64yrs old and younger)'], params['Date Of Birth'],params['What is your date of birth?'], params['What is your DOB?'],params['What is your DOB? '],params['What is your Date Of Birth?']].compact.first
       matched_date = dob_param.scan(/(\d+)\/(\d+)\/(\d+)/)
 
       if matched_date.length > 0
