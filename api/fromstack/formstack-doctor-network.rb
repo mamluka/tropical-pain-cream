@@ -39,6 +39,7 @@ class FormStackDoctorNetwork < Grape::API
                                               params['Please provide me your Physical Address '],
                                               params['Shipping Address'],
                                               params['Where would you like to have it shipped to? '],
+                                              params['Where would you like to have it shipped to?'],
                                               params['What is your address?'],
                                               params['When we ship the cream to you, someone will have to sign for the package, being that it is a medication. It will be shipped during normal business hours of 8am -5pm. What is your physical address?']
                                              ].compact.select { |x| x.length > 0 }.first
@@ -134,21 +135,21 @@ class FormStackDoctorNetwork < Grape::API
       ws[new_row_num, 10] = form[:insuranceBinNumber]
       ws[new_row_num, 11] = form[:insurancePCNNumber]
       ws[new_row_num, 12] = form[:address]
-      ws[new_row_num, 12] = form[:city]
-      ws[new_row_num, 12] = form[:stateCode]
-      ws[new_row_num, 12] = form[:zipcode]
-      ws[new_row_num, 12] = form[:ship_to_address]
-      ws[new_row_num, 12] = form[:ship_to_city]
-      ws[new_row_num, 12] = form[:ship_to_stateCode]
-      ws[new_row_num, 12] = form[:PhysicianNPI]
-      ws[new_row_num, 12] = form[:PhysicianFirstName]
-      ws[new_row_num, 12] = form[:PhysicianLastName]
-      ws[new_row_num, 12] = form[:PhysicianAddress1]
-      ws[new_row_num, 12] = form[:PhysicianCity]
-      ws[new_row_num, 12] = form[:PhysicianState]
-      ws[new_row_num, 12] = form[:PhysicianZip]
-      ws[new_row_num, 12] = form[:PhysicianPhone]
-      ws[new_row_num, 12] = form[:PhysicianFax]
+      ws[new_row_num, 13] = form[:city]
+      ws[new_row_num, 14] = form[:stateCode]
+      ws[new_row_num, 15] = form[:zipcode]
+      ws[new_row_num, 16] = form[:ship_to_address]
+      ws[new_row_num, 17] = form[:ship_to_city]
+      ws[new_row_num, 18] = form[:ship_to_stateCode]
+      ws[new_row_num, 19] = form[:PhysicianNPI]
+      ws[new_row_num, 20] = form[:PhysicianFirstName]
+      ws[new_row_num, 21] = form[:PhysicianLastName]
+      ws[new_row_num, 22] = form[:PhysicianAddress1]
+      ws[new_row_num, 23] = form[:PhysicianCity]
+      ws[new_row_num, 24] = form[:PhysicianState]
+      ws[new_row_num, 25] = form[:PhysicianZip]
+      ws[new_row_num, 26] = form[:PhysicianPhone]
+      ws[new_row_num, 27] = form[:PhysicianFax]
 
       ws.save
 
