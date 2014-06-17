@@ -85,7 +85,7 @@ class FormStackDoctorNetwork < Grape::API
       }
 
       doctor_name = [params['Doctors Name'], params['Ok. Great!! What’s the name of the Doctor you’re seeing for your pain?'], params['What’s the name of the Doctor you’re seeing for your pain?']].compact.first
-      if doctor_name.inclide? "\n"
+      if doctor_name.include? "\n"
         form = form.merge PhysicianFirstName: doctor_name['first'],
                           PhysicianLastName: doctor_name['last']
       else
