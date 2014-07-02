@@ -57,7 +57,7 @@ class FormStackDoctorNetwork < Grape::API
       end
       form = {
           full_name: "#{lead_full_name['first']} #{lead_full_name['last']}",
-          phone: [params['Primary Phone #'], params['Phone'], params['What is the best number to reach you?'], params['Do you know the phone number for that office?']].compact.first,
+          phone: [params['Primary Phone #'], params['Phone'], params['What is the best number to reach you?'], params['Do you know the phone number for that office?'],params['What is your primary phone number?']].compact.first,
           insuranceCarrierName: [params['What is the name of your Health insurance carrier?'], params['Insurance Company Name'], params['What is the name of your Insurance Company Name?']].compact.first,
           insuranceCarrierPhone: [params['What’s the Phone Number of your Insurance Company?'], params['Insurance Company Phone #'], params['What is your Insurance Company\'s Phone #?']].compact.first,
           insurancePlanNumber: [params['On the front of the card you should see your Policy Number or Member ID Number. What is that number? '], params['Insurance Company Member ID/Policy #'], params['What is your Insurance Company\'s Member ID/Policy #']].compact.first,
@@ -84,7 +84,7 @@ class FormStackDoctorNetwork < Grape::API
           PhysicianFax: '9876111111',
       }
 
-      doctor_name = [params['Doctors Name'], params['Ok. Great!! What’s the name of the Doctor you’re seeing for your pain?'], params['What’s the name of the Doctor you’re seeing for your pain?']].compact.first
+      doctor_name = [params['Doctors Name'], params['Ok. Great!! What’s the name of the Doctor you’re seeing for your pain?'], params['What’s the name of the Doctor you’re seeing for your pain?'],params['What is your name as it appears on the card?']].compact.first
       if doctor_name.include? "\n"
         form = form.merge PhysicianFirstName: doctor_name['first'],
                           PhysicianLastName: doctor_name['last']
