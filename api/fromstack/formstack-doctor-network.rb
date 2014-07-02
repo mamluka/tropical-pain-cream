@@ -51,10 +51,11 @@ class FormStackDoctorNetwork < Grape::API
         lead_full_name = CompositeDecoder.decode lead_name_field
       else
         lead_full_name = {
-            first: lead_name_field.split(' ').first,
-            last: (lead_name_field.split(' ').last rescue "Not set")
+            'first' => lead_name_field.split(' ').first,
+            'last' => (lead_name_field.split(' ').last rescue 'Not set')
         }
       end
+      
       form = {
           full_name: "#{lead_full_name['first']} #{lead_full_name['last']}",
           phone: [params['Primary Phone #'], params['Phone'], params['What is the best number to reach you?'], params['Do you know the phone number for that office?'], params['What is your primary phone number?']].compact.first,
