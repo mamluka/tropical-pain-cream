@@ -61,7 +61,7 @@ class FormStackDoctorNetwork < Grape::API
           insuranceCarrierName: [params['What is the name of your Health insurance carrier?'], params['Insurance Company Name'], params['What is the name of your Insurance Company Name?']].compact.first,
           insuranceCarrierPhone: [params['What’s the Phone Number of your Insurance Company?'], params['Insurance Company Phone #'], params['What is your Insurance Company\'s Phone #?']].compact.first,
           insurancePlanNumber: [params['On the front of the card you should see your Policy Number or Member ID Number. What is that number? '], params['Insurance Company Member ID/Policy #'], params['What is your Insurance Company\'s Member ID/Policy #']].compact.first,
-          insuranceGroupNumber: [params['What is the RX Group # Number? '], params['Insurance RX Group #'], params['Your RX Group # ?']].compact.first,
+          insuranceGroupNumber: [params['What is the RX Group # Number? '], params['Insurance RX Group #'], params['Your RX Group # ?'],params['What is the RX Group # Number?']].compact.first,
           insuranceBinNumber: [params['What is the RX BIN # Number?'], params['Insurance RX BIN #'], params['Your Insurance RX BIN # ?']].compact.first,
           insurancePCNNumber: [params['What is the PCN Number?'], params['Insurance PCN Number'], params['What is your PCN Number ?']].compact.first,
           address: 'unspecified',
