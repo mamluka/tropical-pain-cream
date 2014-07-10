@@ -61,7 +61,7 @@ class FormStackDoctorNetwork < Grape::API
           phone: [params['Primary Phone #'], params['Phone'], params['What is the best number to reach you?'], params['What is your primary phone number?']].compact.first,
           insuranceCarrierName: [params['What is the name of your Health insurance carrier?'], params['Insurance Company Name'], params['What is the name of your Insurance Company Name?']].compact.first,
           insuranceCarrierPhone: [params['What’s the Phone Number of your Insurance Company?'], params['Insurance Company Phone #'], params['What is your Insurance Company\'s Phone #?']].compact.first,
-          insurancePlanNumber: [params['On the front of the card you should see your Policy Number or Member ID Number. What is that number? '], params['Insurance Company Member ID/Policy #'], params['What is your Insurance Company\'s Member ID/Policy #']].compact.first,
+          insurancePlanNumber: [params['On the front of the card you should see your Policy Number or Member ID Number. What is that number? '], params['Insurance Company Member ID/Policy #'], params['What is your Insurance Company\'s Member ID/Policy #'], params['On the front of the card you should see your Policy Number or Member ID Number. What is that number?']].compact.first,
           insuranceGroupNumber: [params['What is the RX Group # Number? '], params['Insurance RX Group #'], params['Your RX Group # ?'], params['What is the RX Group # Number?']].compact.first,
           insuranceBinNumber: [params['What is the RX BIN # Number?'], params['Insurance RX BIN #'], params['Your Insurance RX BIN # ?']].compact.first,
           insurancePCNNumber: [params['What is the PCN Number?'], params['Insurance PCN Number'], params['What is your PCN Number ?']].compact.first,
@@ -81,7 +81,7 @@ class FormStackDoctorNetwork < Grape::API
           PhysicianCity: 'unspecified',
           PhysicianState: 'NY',
           PhysicianZip: '12345',
-          PhysicianPhone: [params['Do you know the phone number?'], params['Do you know the phone number'], params['Doctors Phone #']].compact.first,
+          PhysicianPhone: [params['Do you know the phone number?'], params['Do you know the phone number'], params['Doctors Phone #'],params['Do you know the phone number for that office?']].compact.first,
           PhysicianFax: '9876111111',
       }
 
