@@ -90,6 +90,7 @@ class FormStackDoctorNetwork < Grape::API
         form = form.merge PhysicianFirstName: doctor_name['first'],
                           PhysicianLastName: doctor_name['last']
       else
+        doctor_name = doctor_name.split(' ')
         form = form.merge PhysicianFirstName: doctor_name[0], PhysicianLastName: (doctor_name[1] rescue 'Not given')
       end
 
