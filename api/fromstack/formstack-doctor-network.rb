@@ -115,43 +115,43 @@ class FormStackDoctorNetwork < Grape::API
       login_hash[:password] = login_details[:password]
       subdomain = login_details[:subdomain]
 
-      session = GoogleDrive.login($settings[:google][:username], $settings[:google][:password])
-      ws = session.spreadsheet_by_key($settings[:google][:doc_id]).worksheets[0]
-
-      new_row_num = ws.rows.length + 1
-
-      ws[new_row_num, 1] = Time.now.to_s
-      ws[new_row_num, 2] = form[:dateOfBirth]
-      ws[new_row_num, 3] = form[:full_name]
-
-      ws[new_row_num, 4] = form[:phone]
-
-      ws[new_row_num, 5] = form[:insuranceCarrierName]
-
-      ws[new_row_num, 6] = form[:insuranceCarrierPhone]
-      ws[new_row_num, 7] = form[:insuranceName]
-      ws[new_row_num, 8] = form[:insurancePlanNumber]
-      ws[new_row_num, 9] = form[:insuranceGroupNumber]
-      ws[new_row_num, 10] = form[:insuranceBinNumber]
-      ws[new_row_num, 11] = form[:insurancePCNNumber]
-      ws[new_row_num, 12] = form[:address]
-      ws[new_row_num, 13] = form[:city]
-      ws[new_row_num, 14] = form[:stateCode]
-      ws[new_row_num, 15] = form[:zipcode]
-      ws[new_row_num, 16] = form[:ship_to_address]
-      ws[new_row_num, 17] = form[:ship_to_city]
-      ws[new_row_num, 18] = form[:ship_to_stateCode]
-      ws[new_row_num, 19] = form[:PhysicianNPI]
-      ws[new_row_num, 20] = form[:PhysicianFirstName]
-      ws[new_row_num, 21] = form[:PhysicianLastName]
-      ws[new_row_num, 22] = form[:PhysicianAddress1]
-      ws[new_row_num, 23] = form[:PhysicianCity]
-      ws[new_row_num, 24] = form[:PhysicianState]
-      ws[new_row_num, 25] = form[:PhysicianZip]
-      ws[new_row_num, 26] = form[:PhysicianPhone]
-      ws[new_row_num, 27] = form[:PhysicianFax]
-
-      ws.save
+      # session = GoogleDrive.login($settings[:google][:username], $settings[:google][:password])
+      # ws = session.spreadsheet_by_key($settings[:google][:doc_id]).worksheets[0]
+      #
+      # new_row_num = ws.rows.length + 1
+      #
+      # ws[new_row_num, 1] = Time.now.to_s
+      # ws[new_row_num, 2] = form[:dateOfBirth]
+      # ws[new_row_num, 3] = form[:full_name]
+      #
+      # ws[new_row_num, 4] = form[:phone]
+      #
+      # ws[new_row_num, 5] = form[:insuranceCarrierName]
+      #
+      # ws[new_row_num, 6] = form[:insuranceCarrierPhone]
+      # ws[new_row_num, 7] = form[:insuranceName]
+      # ws[new_row_num, 8] = form[:insurancePlanNumber]
+      # ws[new_row_num, 9] = form[:insuranceGroupNumber]
+      # ws[new_row_num, 10] = form[:insuranceBinNumber]
+      # ws[new_row_num, 11] = form[:insurancePCNNumber]
+      # ws[new_row_num, 12] = form[:address]
+      # ws[new_row_num, 13] = form[:city]
+      # ws[new_row_num, 14] = form[:stateCode]
+      # ws[new_row_num, 15] = form[:zipcode]
+      # ws[new_row_num, 16] = form[:ship_to_address]
+      # ws[new_row_num, 17] = form[:ship_to_city]
+      # ws[new_row_num, 18] = form[:ship_to_stateCode]
+      # ws[new_row_num, 19] = form[:PhysicianNPI]
+      # ws[new_row_num, 20] = form[:PhysicianFirstName]
+      # ws[new_row_num, 21] = form[:PhysicianLastName]
+      # ws[new_row_num, 22] = form[:PhysicianAddress1]
+      # ws[new_row_num, 23] = form[:PhysicianCity]
+      # ws[new_row_num, 24] = form[:PhysicianState]
+      # ws[new_row_num, 25] = form[:PhysicianZip]
+      # ws[new_row_num, 26] = form[:PhysicianPhone]
+      # ws[new_row_num, 27] = form[:PhysicianFax]
+      #
+      # ws.save
 
       response = RestClient.post "https://#{subdomain}.insuracrm.com/api/", form.merge(login_hash)
 
